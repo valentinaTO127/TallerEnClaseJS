@@ -1,3 +1,4 @@
+//valores ingresados por elusuario
 let nombre = "";
 let edad = 0;
 let tipoDocumento = "";
@@ -8,8 +9,10 @@ let comisiones = 0;
 let totalHorasExtras = 0;
 let nivelRiesgo = "";
 
+//formularios
+const formDatosGenerales = document.getElementById("datosGenerales");
 
-
+//constante del taller (para calcular sobre el salario)
 const salarioMinimo = 1750905;
 const salarioMinimoIntegral = 22761765;
 const auxilioTransporte = 249095;
@@ -23,3 +26,25 @@ const riesgo3 = 2.436;
 const riesgo4 = 4.350;
 const riesgo5 = 6.960;
 
+
+formDatosGenerales.addEventListener('submit', (e) => {
+    e.preventDefault(); // Evita recargar
+    nombre = document.getElementById("nombre").value;
+    edad = parseInt(document.getElementById("edad").value);
+    tipoDocumento = document.getElementById("tipoDocumento").value;
+    numeroDocumento = document.getElementById("numeroDocumento").value;
+
+    validar(edad);
+});
+
+function validar(edad) {
+    if (edad < 18) {
+        stop();
+    } else if (18 <= edad < 25) {
+        esUsuarioBenerficiarioPorCotizante();
+    } else if (edad <= 60) {
+        pension();
+    } else {
+        salaraio();
+    }
+}
