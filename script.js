@@ -20,11 +20,11 @@ const porcentajePension = 0.04;
 const porcentajeSalud = 0.04;
 const porcentajeFondoSolidaridad = 0.01;
 
-const riesgo1 = 0.522;
-const riesgo2 = 1.044;
-const riesgo3 = 2.436;
-const riesgo4 = 4.350;
-const riesgo5 = 6.960;
+const riesgo1 = 0.00522;
+const riesgo2 = 0.01044;
+const riesgo3 = 0.02436;
+const riesgo4 = 0.04350;
+const riesgo5 = 0.06960;
 
 
 formDatosGenerales.addEventListener('submit', (e) => {
@@ -40,11 +40,39 @@ formDatosGenerales.addEventListener('submit', (e) => {
 function validar(edad) {
     if (edad < 18) {
         stop();
-    } else if (18 <= edad < 25) {
+    } else if (18 <= edad && edad< 25) {
         esUsuarioBenerficiarioPorCotizante();
-    } else if (edad <= 60) {
+    } else if (edad >= 60) {
         pension();
     } else {
-        salaraio();
+        salaraioCalculo();
     }
+}
+
+
+let ibc = (salario + comisiones + totalHorasExtras) * 0.7
+let calculoAuxilioTransporte = salario < 2 * salarioMinimo? auxilioTransporte : 0
+let calculoSalud = ibc * porcentajeSalud
+let calculoFondoSolidaridad = ibc * porcentajeFondoSolidaridad
+let calculoPension = ibc >= 4 * salarioMinimo? ibc * porcentajePension + calculoFondoSolidaridad : ibc * porcentajePension
+
+switch (nivelRiesgo) {
+    case "1":
+        let calculoArl = ibc * riesgo1;
+        break;
+    case "1":
+    
+    break;
+    case "1":
+        
+    break;
+    case "1":
+        
+    break;
+    case "1":
+        
+    break;
+
+    default:
+        break;
 }
