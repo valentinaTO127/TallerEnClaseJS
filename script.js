@@ -26,6 +26,7 @@ const riesgo3 = 0.02436;
 const riesgo4 = 0.04350;
 const riesgo5 = 0.06960;
 
+const riesgos = [riesgo1, riesgo2, riesgo3, riesgo4, riesgo5];
 
 formDatosGenerales.addEventListener('submit', (e) => {
     e.preventDefault(); // Evita recargar
@@ -55,24 +56,6 @@ let calculoAuxilioTransporte = salario < 2 * salarioMinimo? auxilioTransporte : 
 let calculoSalud = ibc * porcentajeSalud
 let calculoFondoSolidaridad = ibc * porcentajeFondoSolidaridad
 let calculoPension = ibc >= 4 * salarioMinimo? ibc * porcentajePension + calculoFondoSolidaridad : ibc * porcentajePension
+let calculoArl = ibc * riesgos[parseInt(nivelRiesgo) - 1];
 
-switch (nivelRiesgo) {
-    case "1":
-        let calculoArl = ibc * riesgo1;
-        break;
-    case "1":
-    
-    break;
-    case "1":
-        
-    break;
-    case "1":
-        
-    break;
-    case "1":
-        
-    break;
 
-    default:
-        break;
-}
