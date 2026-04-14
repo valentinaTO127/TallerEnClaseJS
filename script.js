@@ -20,13 +20,7 @@ const porcentajePension = 0.04;
 const porcentajeSalud = 0.04;
 const porcentajeFondoSolidaridad = 0.01;
 
-const riesgo1 = 0.00522;
-const riesgo2 = 0.01044;
-const riesgo3 = 0.02436;
-const riesgo4 = 0.04350;
-const riesgo5 = 0.06960;
-
-const riesgos = [riesgo1, riesgo2, riesgo3, riesgo4, riesgo5];
+const riesgos = [0.00522, 0.01044, 0.02436, 0.04350, 0.06960];
 
 formDatosGenerales.addEventListener('submit', (e) => {
     e.preventDefault(); // Evita recargar
@@ -59,3 +53,9 @@ let calculoPension = ibc >= 4 * salarioMinimo? ibc * porcentajePension + calculo
 let calculoArl = ibc * riesgos[parseInt(nivelRiesgo) - 1];
 
 
+
+function calcularPorcentaje(base, porcentaje) {
+    let resultado = base * porcentaje;
+
+    return resultado;
+}
