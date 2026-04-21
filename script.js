@@ -1,16 +1,12 @@
 //valores ingresados por elusuario
-let nombre = "";
-let edad = 0;
-let tipoDocumento = "";
-let numeroDocumento = "";
-
-let salario = 0;
-let comisiones = 0;
-let totalHorasExtras = 0;
-let nivelRiesgo = "";
-
-//formularios
-const formDatosGenerales = document.getElementById("datosGenerales");
+let nombre = validarCampos("Nombre:", "", "texto");
+let edad = validarCampos("Edad:", 0, "number");
+let tipoDocumento = validarCampos("Tipo de docmuento.\nUsa una de las siguientes opciones: \nCC\nTI\nRC\nCE\nPPT\nPasaporte", "", "texto");
+let numeroDocumento = validarCampos("Numero de documento:", "", "texto");
+let salario = validarCampos("Indica tu salario:", 0, "number");
+let comisiones = validarCampos("Comisiones:", 0, "number");
+let totalHorasExtras = validarCampos("Horas extra:", 0, "number");
+let nivelRiesgo = validarCampos("Nivel de riesgo ARL\nUsa una de las siguientes opciones: \n1\n2\n3\n4\n5", "", "number");
 
 //constante del taller (para calcular sobre el salario)
 const salarioMinimo = 1750905;
@@ -22,15 +18,17 @@ const porcentajeFondoSolidaridad = 0.01;
 
 const riesgos = [0.00522, 0.01044, 0.02436, 0.04350, 0.06960];
 
-formDatosGenerales.addEventListener('submit', (e) => {
-    e.preventDefault(); // Evita recargar
-    nombre = document.getElementById("nombre").value;
-    edad = parseInt(document.getElementById("edad").value);
-    tipoDocumento = document.getElementById("tipoDocumento").value;
-    numeroDocumento = document.getElementById("numeroDocumento").value;
 
-    validar(edad);
-});
+function validarCampos (text, defa, tipo) {
+    let valor;
+    let condition;
+    do {
+        valor = prompt(text, defa);
+        condition = tipo == "texto"? !isNaN(valor) : isNaN(valor);
+        valor = tipo == "texto"? valor : parseInt(valor);
+    } while (condition);
+    return valor;
+}
 
 function validar(edad) {
     if (edad < 18) {
