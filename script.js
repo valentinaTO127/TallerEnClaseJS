@@ -1,12 +1,12 @@
-//valores ingresados por elusuario
-let nombre = validarCampos("Nombre:", "", "texto");
-let edad = validarCampos("Edad:", 0, "number");
-let tipoDocumento = validarCampos("Tipo de docmuento.\nUsa una de las siguientes opciones: \nCC\nTI\nRC\nCE\nPPT\nPasaporte", "", "texto");
-let numeroDocumento = validarCampos("Numero de documento:", "", "texto");
-let salario = validarCampos("Indica tu salario:", 0, "number");
-let comisiones = validarCampos("Comisiones:", 0, "number");
-let totalHorasExtras = validarCampos("Horas extra:", 0, "number");
-let nivelRiesgo = validarCampos("Nivel de riesgo ARL\nUsa una de las siguientes opciones: \n1\n2\n3\n4\n5", "", "number");
+ecto//valores ingresados por elusuario
+let nombre = validarCampos("Nombre:", "", "texto", "texto");
+let edad = validarCampos("Edad:", 0, "number", "number");
+let tipoDocumento = validarCampos("Tipo de docmuento.\nUsa una de las siguientes opciones: \nCC\nTI\nRC\nCE\nPPT\nPasaporte", "", "texto", "texto");
+let numeroDocumento = validarCampos("Numero de documento:", "", "number", "texto");
+let salario = validarCampos("Indica tu salario:", 0, "number", "number");
+let comisiones = validarCampos("Comisiones:", 0, "number", "number");
+let totalHorasExtras = validarCampos("Horas extra:", 0, "number", "number");
+let nivelRiesgo = validarCampos("Nivel de riesgo ARL\nUsa una de las siguientes opciones: \n1\n2\n3\n4\n5", "", "number", "number");
 
 //constante del taller (para calcular sobre el salario)
 const salarioMinimo = 1750905;
@@ -19,13 +19,13 @@ const porcentajeFondoSolidaridad = 0.01;
 const riesgos = [0.00522, 0.01044, 0.02436, 0.04350, 0.06960];
 
 
-function validarCampos (text, defa, tipo) {
+function validarCampos (text, defecto, tipoEntrada, tipoConversion) {
     let valor;
     let condition;
     do {
-        valor = prompt(text, defa);
-        condition = tipo == "texto"? !isNaN(valor) : isNaN(valor);
-        valor = tipo == "texto"? valor : parseInt(valor);
+        valor = prompt(text, defecto);
+        condition = tipoEntrada == "texto"? !isNaN(valor) : isNaN(valor);
+        valor = tipoConversion == "texto"? valor : parseInt(valor);
     } while (condition);
     return valor;
 }
