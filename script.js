@@ -1,9 +1,10 @@
-ecto//valores ingresados por elusuario
+//valores ingresados por elusuario
 let nombre = ""
 let edad = 0
 let tipoDocumento = ""
 let numeroDocumento = ""
 
+//valores ingresados por elusuario sobre el salario
 let salario = 0
 let comisiones = 0
 let totalHorasExtras = 0
@@ -21,12 +22,19 @@ const riesgos = [0.00522, 0.01044, 0.02436, 0.04350, 0.06960];
 
 
 function validarCampos (valor, tipoEntrada, tipoConversion) {
-    let condition;
-    do {
+    let condition 
+    try {
         condition = tipoEntrada == "texto"? !isNaN(valor) : isNaN(valor);
-        valor = tipoConversion == "texto"? valor : parseInt(valor);
-    } while (condition);
-    return valor;
+        if(condition == false) throw "El campo no acecpta " + tipoEntrada;
+        if (condition) {
+            valor = tipoConversion == "texto"? valor : parseInt(valor);
+            return valor
+        }
+        
+    } catch (error) {
+      console.log(error)  
+    } 
+
 }
 
 const formDatosGenerales = document.getElementById('datosGenerales');
@@ -40,9 +48,11 @@ formDatosGenerales.addEventListener('submit', (event) => {
     numeroDocumento = validarCampos(document.getElementById('numeroDocumento').value, "number", "texto");
 
 
+    show()
 })
 
 const formDatosSalariales = document.getElementById('datosSalariales');
+
 
 formDatosSalariales.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -53,6 +63,15 @@ formDatosSalariales.addEventListener('submit', (event) => {
     nivelRiesgo = validarCampos(document.getElementById('nivelRiesgo').value,"number", "number");
 
 })
+
+function show() {
+    if (nombre == "error") {
+        formDatosGenerales.style.display = 'none';
+        formDatosSalariales.style.display = 'block';
+    }
+    console.log(nombre)
+}
+
 
 function validar(edad) {
     if (edad < 18) {
