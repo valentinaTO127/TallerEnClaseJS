@@ -1,0 +1,85 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#datosSalariales, #errores, #resultados {
+    display: none;
+}
+
+body {
+    padding: 8vh 4vw 0;
+}
+
+#contenedor {
+    display: flex;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 32px;
+    color: #15215c;
+}
+
+.text {
+    margin-bottom: 16px;
+    font-size: 1.5rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+#datosSalariales {
+    flex-direction: column;
+}
+
+input, select {
+    padding: 4px 8px;
+    width: 12vw;
+    border-radius: 12px;
+    border: 1px solid #15215c;
+    margin-bottom: 12px;
+    
+}
+
+button {
+    width: fit-content;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid #15215c;
+    margin: 12px 0;
+    background-color: #15215c;
+    color: #ffffff;
+}
+
+label {
+    margin-bottom: 8px;
+}
+
+li {    
+    list-style: none;
+    color: #c20000;
+    padding: 12px 8px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    background-color: #fcefbd;
+}
+
+section {
+    width: 50%;
+}
+
+
+
+#resultados li {
+    color: #000000;
+    background-color: #ffffff;
+    margin-bottom: 0;
+}
+
+#resultados ul {
+    width: 50%;
+}
