@@ -33,38 +33,52 @@ const formDatosSalariales = document.getElementById('datosSalariales');
 const formDatosGenerales = document.getElementById('datosGenerales');
 const erroresDOM = document.getElementById('errores');
 const resultadosDOM = document.getElementById('resultados');
-const resultadosParrafoDOM = document.getElementById('resultadosP');
+const ibcDOM = document.getElementById('ibc');
+const auxilioTransporteDOM = document.getElementById('auxTransporte');
+const saludDOM = document.getElementById('salud');
+const fondoSolidaridadDOM = document.getElementById('fondoSolidaridad');
+const pensionDOM = document.getElementById('pension');
+const arlDOM = document.getElementById('arl');
+const salarioDOM = document.getElementById('salarioRes');
+const comisionesDOM = document.getElementById('comisionesRes');
+const horasExtraDOM = document.getElementById('horasExtraRes');
+const totalDedDOM = document.getElementById('totalDed');
+const netoDOM = document.getElementById('neto');
+const totalDevDom = document.getElementById('totalDev');
 
 
+function validarCampos (valor, tipo, inputNombre) {
+    if (tipo == "texto") {
 
-function validarCampos (valor, tipo) {
-    let condition = tipo == "texto"? isNaN(valor) : !isNaN(valor);
-        if (condition) {
-            return valor
-            
-        } else {
-            if (tipo == "texto") {
-                mensajes.push(mensajesDeError[0])
-            } else{
-                mensajes.push(mensajesDeError[1])
-            }
-     
+        if (/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(valor.trim())) {
+            return valor;
         }
+
+        mensajes.push("No se permiten numeros en el campo de " + inputNombre);
+        return null;
+    }
+
+    if (tipo == "number") {
+
+        if (!isNaN(valor.trim()) && valor !== "") {
+            return Number(valor.trim());
+        }
+
+        mensajes.push("Solo se permiten numeros en el campo de " + inputNombre);
+        return null;
+    }
 }
 
 
 formDatosGenerales.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    nombre = validarCampos(document.getElementById('nombre').value,"texto");
-    edad = parseInt(validarCampos(document.getElementById('edad').value,"number"));
-    tipoDocumento = validarCampos(document.getElementById('tipoDocumento').value,"texto");
-    numeroDocumento = validarCampos(document.getElementById('numeroDocumento').value, "number");
+    nombre = validarCampos(document.getElementById('nombre').value,"texto","nombre");
+    edad = parseInt(validarCampos(document.getElementById('edad').value,"number", "edad"));
+    tipoDocumento = validarCampos(document.getElementById('tipoDocumento').value,"texto", "tipo de documento");
+    numeroDocumento = validarCampos(document.getElementById('numeroDocumento').value, "number", "numero de documento");
     
-    let borrarLis = document.querySelectorAll("li")
-    borrarLis.forEach(li => {
-        li.remove()
-    })
+    erroresDOM.innerHTML = "";
     
         if (edad < 1 || 130 < edad) {
             mensajes.push("Edad" + mensajesDeError[2] + "1 a 130")
@@ -90,11 +104,29 @@ formDatosGenerales.addEventListener('submit', (event) => {
 
 formDatosSalariales.addEventListener('submit', (event) => {
     event.preventDefault();
+    
+    if (edad >= 60) {
+        console.log('d')
+        salario = validarCampos(document.getElementById('salario').value, "number", "salario");
+    } else {
+        salario = validarCampos(document.getElementById('salario').value, "number", "salario");
+        comisiones = validarCampos(document.getElementById('comisiones').value, "number", "comisiones");
+        totalHorasExtras = validarCampos(document.getElementById('horasExtra').value, "number", "horas extra");
+        nivelRiesgo = validarCampos(document.getElementById('nivelRiesgo').value,"number", "nivel de riesgo");
 
-    salario = validarCampos(document.getElementById('salario').value, "number");
-    comisiones = validarCampos(document.getElementById('comisiones').value, "number");
-    totalHorasExtras = validarCampos(document.getElementById('horasExtra').value, "number");
-    nivelRiesgo = validarCampos(document.getElementById('nivelRiesgo').value,"number");
+        if (salario < 100000 || 99999999 < salario) {
+            mensajes.push("Salario" + mensajesDeError[2] + "100000 a 99999999")
+        } 
+        if (comisiones < 1000 || 99999999 < comisiones) {
+                mensajes.push("Comisiones" + mensajesDeError[2] + "1000 a 99999999")
+        } 
+        if (totalHorasExtras < 1000 || 50000000 < totalHorasExtras) {
+                mensajes.push("Horas extra" + mensajesDeError[2] + "1000 a 50000000")
+        } 
+    }
+
+    erroresDOM.innerHTML = "";
+    
 
      if(mensajes.length > 0){
             erroresDOM.style.display = 'block';
@@ -104,7 +136,13 @@ formDatosSalariales.addEventListener('submit', (event) => {
                 erroresDOM.appendChild(newLi);
             });
         } else  {
-            calculos(salario, comisiones, totalHorasExtras, nivelRiesgo)
+            if (edad >= 60) {
+                
+        console.log('e')
+                calcularPension(salario)
+            } else {
+                calcular(salario, comisiones, totalHorasExtras, nivelRiesgo)
+            }
         }
 
         
@@ -122,34 +160,69 @@ function show() {
         resultadosDOM.innerHTML = "Usted clasifica como usuario beneeficiario por cotizante, por lo tanto no puede seguir con el siguiente paso"
     } else if (edad >= 60) {
         formDatosGenerales.style.display = 'none';
-        formDatosSalariales.style.display = 'block';
-        document.getElementById('comisiones').style.display = 'none';
-        document.getElementById('horasExtra').style.display = 'none';
-        document.getElementById('nivelRiesgo').style.display = 'none';
+        formDatosSalariales.style.display = 'flex';
+        formDatosSalariales.innerHTML = `<label for="salario">Salario</label>
+                <input type="text" id="salario" name="salario" placeholder="4000000" minlength="6" maxlength="8" required>
+                <button type="submit">Enviar</button>`
         resultadosDOM.style.display = 'block'
-        resultadosDOM.innerHTML = "Usted es mayor de 60 años y por lo tanto se le hara unicamente el calculo de pension"
     } else {
         formDatosGenerales.style.display = 'none';
-        formDatosSalariales.style.display = 'block';
+        formDatosSalariales.style.display = 'flex';
     }
         
 }
 
-function validar(edad) {
-    
-}
 
+function calcular(salarioCalculo, comision, horasExtras, riesgo) {
+    salarioCalculo = Number(salarioCalculo);
+    comision = Number(comision);
+    horasExtras = Number(horasExtras);
 
-function calculos(salarioCalculo, comision, horasExtras, riesgo) {
-    let ibc =  calcularPorcentaje((salarioCalculo + comision + horasExtras), 0.7)
+    let ibc =  calcularPorcentaje(salarioCalculo + comision + horasExtras, 0.7)
     let calculoAuxilioTransporte = salarioCalculo < 2 * salarioMinimo? auxilioTransporte : 0
     let calculoSalud = calcularPorcentaje(ibc, porcentajeSalud)
-    let calculoFondoSolidaridad = calcularPorcentaje(ibc, porcentajeFondoSolidaridad)
-    let calculoPension = ibc >= 4 * salarioMinimo? calcularPorcentaje(ibc, porcentajePension + calculoFondoSolidaridad) : calcularPorcentaje(ibc, porcentajePension)
+    let calculoFondoSolidaridad = ibc >= 4 * salarioMinimo? calcularPorcentaje(ibc, porcentajeFondoSolidaridad) : 0
+    let calculoPension = calcularPorcentaje(ibc, porcentajePension) + calculoFondoSolidaridad
     let calculoArl = calcularPorcentaje(ibc, riesgos[parseInt(riesgo)]);
 
-    resultadosParrafoDOM.innerHTML = `IBC: ${ibc}\nAuxilio de transporte: ${calculoAuxilioTransporte}\nSalud: ${calculoSalud}\nFondo solidaridad: ${calculoFondoSolidaridad} \nPension: ${calculoPension}\nNivel de riesgo: ${calculoArl}`
-    resultadosDOM.style.display = 'block'
+    salarioDOM.innerHTML = `<strong>Salario:</strong> $${salarioCalculo}`
+    comisionesDOM.innerHTML = `<strong>Comisiones:</strong> $${comision}`
+    horasExtraDOM.innerHTML = `<strong>Horas Extra:</strong> $${horasExtras}`
+    
+    ibcDOM.innerHTML = `<strong>IBC:</strong> $${Math.floor(ibc)}`
+    auxilioTransporteDOM.innerHTML = `<strong>Auxilio de transporte:</strong> $${calculoAuxilioTransporte}`
+    saludDOM.innerHTML = `<strong>Salud:</strong> $${Math.floor(calculoSalud)}`
+    fondoSolidaridadDOM.innerHTML = `<strong>Fondo solidaridad:</strong> $${Math.floor(calculoFondoSolidaridad)}`
+    pensionDOM.innerHTML = `<strong>Pensión:</strong> $${Math.floor(calculoPension)}`
+    arlDOM.innerHTML = `<strong>ARL:</strong> $${Math.floor(calculoArl)}`
+
+    totalDevDom.innerHTML = `<strong>Total devengado (Salario + Comisiones + Horas extra):</strong> $${salarioCalculo + comision + horasExtras}` 
+    totalDedDOM.innerHTML = `<strong>Total deducciones:</strong> $${Math.floor(calculoSalud + calculoPension + calculoArl)}`
+    netoDOM.innerHTML = `<strong>Ingreso neto (Total devengado + auxilio de transporte - deducibles):</strong> $${salarioCalculo + comision + horasExtras - Math.floor(calculoSalud + calculoPension + calculoArl)}`
+
+    resultadosDOM.style.display = 'flex'
+
+}
+
+function calcularPension(salarioCalculo) {
+    salarioCalculo = Number(salarioCalculo);
+
+    let ibc =  calcularPorcentaje(salarioCalculo, 0.7)
+    let calculoSalud = calcularPorcentaje(ibc, porcentajeSalud)
+    let calculoFondoSolidaridad = ibc >= 4 * salarioMinimo? calcularPorcentaje(ibc, porcentajeFondoSolidaridad) : 0
+
+    salarioDOM.innerHTML = `<strong>Salario:</strong> $${salarioCalculo}`
+    
+    ibcDOM.innerHTML = `<strong>IBC:</strong> $${Math.floor(ibc)}`
+    saludDOM.innerHTML = `<strong>Salud:</strong> $${Math.floor(calculoSalud)}`
+    fondoSolidaridadDOM.innerHTML = `<strong>Fondo solidaridad:</strong> $${Math.floor(calculoFondoSolidaridad)}`
+
+    totalDevDom.innerHTML = `<strong>Total devengado (Salario + Comisiones + Horas extra):</strong> $${salarioCalculo}` 
+    totalDedDOM.innerHTML = `<strong>Total deducciones:</strong> $${Math.floor(calculoSalud)}`
+    netoDOM.innerHTML = `<strong>Ingreso neto (Total devengado + auxilio de transporte - deducibles):</strong> $${salarioCalculo - Math.floor(calculoSalud)}`
+
+    resultadosDOM.style.display = 'flex'
+
 }
 
 
