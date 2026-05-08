@@ -33,6 +33,7 @@ const formDatosSalariales = document.getElementById('datosSalariales');
 const formDatosGenerales = document.getElementById('datosGenerales');
 const erroresDOM = document.getElementById('errores');
 const resultadosDOM = document.getElementById('resultados');
+const resultadosParrafoDOM = document.getElementById('resultadosP');
 
 
 
@@ -49,8 +50,6 @@ function validarCampos (valor, tipo) {
             }
      
         }
-        
-        
 }
 
 
@@ -92,21 +91,43 @@ formDatosGenerales.addEventListener('submit', (event) => {
 formDatosSalariales.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    salario = validarCampos(document.getElementById('salario').value, "number", "number");
-    comisiones = validarCampos(document.getElementById('comisiones').value, "number", "number");
-    totalHorasExtras = validarCampos(document.getElementById('horasExtra').value, "number", "number");
-    nivelRiesgo = validarCampos(document.getElementById('nivelRiesgo').value,"number", "number");
+    salario = validarCampos(document.getElementById('salario').value, "number");
+    comisiones = validarCampos(document.getElementById('comisiones').value, "number");
+    totalHorasExtras = validarCampos(document.getElementById('horasExtra').value, "number");
+    nivelRiesgo = validarCampos(document.getElementById('nivelRiesgo').value,"number");
+
+     if(mensajes.length > 0){
+            erroresDOM.style.display = 'block';
+            mensajes.forEach(m => {
+                let newLi = document.createElement("li");
+                newLi.innerHTML = m
+                erroresDOM.appendChild(newLi);
+            });
+        } else  {
+            calculos(salario, comisiones, totalHorasExtras, nivelRiesgo)
+        }
+
+        
+     mensajes = []
 
 })
 
 
 function show() {
     if (edad < 18) {
-        stop();
+        resultadosDOM.style.display = 'block'
+        resultadosDOM.innerHTML = "Usted es menor de edad, por lo tanto no puede seguir con el siguiente paso"
     } else if (18 <= edad && edad< 25) {
-        esUsuarioBenerficiarioPorCotizante();
+        resultadosDOM.style.display = 'block'
+        resultadosDOM.innerHTML = "Usted clasifica como usuario beneeficiario por cotizante, por lo tanto no puede seguir con el siguiente paso"
     } else if (edad >= 60) {
-        pension();
+        formDatosGenerales.style.display = 'none';
+        formDatosSalariales.style.display = 'block';
+        document.getElementById('comisiones').style.display = 'none';
+        document.getElementById('horasExtra').style.display = 'none';
+        document.getElementById('nivelRiesgo').style.display = 'none';
+        resultadosDOM.style.display = 'block'
+        resultadosDOM.innerHTML = "Usted es mayor de 60 años y por lo tanto se le hara unicamente el calculo de pension"
     } else {
         formDatosGenerales.style.display = 'none';
         formDatosSalariales.style.display = 'block';
@@ -119,13 +140,17 @@ function validar(edad) {
 }
 
 
-let ibc = (salario + comisiones + totalHorasExtras) * 0.7
-let calculoAuxilioTransporte = salario < 2 * salarioMinimo? auxilioTransporte : 0
-let calculoSalud = ibc * porcentajeSalud
-let calculoFondoSolidaridad = ibc * porcentajeFondoSolidaridad
-let calculoPension = ibc >= 4 * salarioMinimo? ibc * porcentajePension + calculoFondoSolidaridad : ibc * porcentajePension
-let calculoArl = ibc * riesgos[parseInt(nivelRiesgo) - 1];
+function calculos(salarioCalculo, comision, horasExtras, riesgo) {
+    let ibc =  calcularPorcentaje((salarioCalculo + comision + horasExtras), 0.7)
+    let calculoAuxilioTransporte = salarioCalculo < 2 * salarioMinimo? auxilioTransporte : 0
+    let calculoSalud = calcularPorcentaje(ibc, porcentajeSalud)
+    let calculoFondoSolidaridad = calcularPorcentaje(ibc, porcentajeFondoSolidaridad)
+    let calculoPension = ibc >= 4 * salarioMinimo? calcularPorcentaje(ibc, porcentajePension + calculoFondoSolidaridad) : calcularPorcentaje(ibc, porcentajePension)
+    let calculoArl = calcularPorcentaje(ibc, riesgos[parseInt(riesgo)]);
 
+    resultadosParrafoDOM.innerHTML = `IBC: ${ibc}\nAuxilio de transporte: ${calculoAuxilioTransporte}\nSalud: ${calculoSalud}\nFondo solidaridad: ${calculoFondoSolidaridad} \nPension: ${calculoPension}\nNivel de riesgo: ${calculoArl}`
+    resultadosDOM.style.display = 'block'
+}
 
 
 function calcularPorcentaje(base, porcentaje) {
