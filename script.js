@@ -20,38 +20,73 @@ const porcentajeFondoSolidaridad = 0.01;
 
 const riesgos = [0.00522, 0.01044, 0.02436, 0.04350, 0.06960];
 
+const mensajesDeError =  [
+    "No se permiten numeros en este campo", 
+    "Solo se permiten numeros en este campo",
+    " debe estar entre un rango de "
+]
 
-function validarCampos (valor, tipoEntrada, tipoConversion) {
-    let condition 
-    try {
-        condition = tipoEntrada == "texto"? !isNaN(valor) : isNaN(valor);
-        if(condition == false) throw "El campo no acecpta " + tipoEntrada;
+let mensajes = []
+
+// DOM
+const formDatosSalariales = document.getElementById('datosSalariales');
+const formDatosGenerales = document.getElementById('datosGenerales');
+const erroresDOM = document.getElementById('errores');
+const resultadosDOM = document.getElementById('resultados');
+
+
+
+function validarCampos (valor, tipo) {
+    let condition = tipo == "texto"? isNaN(valor) : !isNaN(valor);
         if (condition) {
-            valor = tipoConversion == "texto"? valor : parseInt(valor);
             return valor
+            
+        } else {
+            if (tipo == "texto") {
+                mensajes.push(mensajesDeError[0])
+            } else{
+                mensajes.push(mensajesDeError[1])
+            }
+     
         }
         
-    } catch (error) {
-      console.log(error)  
-    } 
-
+        
 }
 
-const formDatosGenerales = document.getElementById('datosGenerales');
 
 formDatosGenerales.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    nombre = validarCampos(document.getElementById('nombre').value,"texto", "texto");
-    edad = validarCampos(document.getElementById('edad').value,"number", "number");
-    tipoDocumento = validarCampos(document.getElementById('tipoDocumento').value,"texto", "texto");
-    numeroDocumento = validarCampos(document.getElementById('numeroDocumento').value, "number", "texto");
+    nombre = validarCampos(document.getElementById('nombre').value,"texto");
+    edad = parseInt(validarCampos(document.getElementById('edad').value,"number"));
+    tipoDocumento = validarCampos(document.getElementById('tipoDocumento').value,"texto");
+    numeroDocumento = validarCampos(document.getElementById('numeroDocumento').value, "number");
+    
+    let borrarLis = document.querySelectorAll("li")
+    borrarLis.forEach(li => {
+        li.remove()
+    })
+    
+        if (edad < 1 || 130 < edad) {
+            mensajes.push("Edad" + mensajesDeError[2] + "1 a 130")
+        } 
+    
+        if(mensajes.length > 0){
+            erroresDOM.style.display = 'block';
+            mensajes.forEach(m => {
+                let newLi = document.createElement("li");
+                newLi.innerHTML = m
+                erroresDOM.appendChild(newLi);
+            });
+        } else  {
+            show()
+        }
 
-
-    show()
+        console.log(nombre, edad, numeroDocumento)
+        
+     mensajes = []
 })
 
-const formDatosSalariales = document.getElementById('datosSalariales');
 
 
 formDatosSalariales.addEventListener('submit', (event) => {
@@ -64,16 +99,8 @@ formDatosSalariales.addEventListener('submit', (event) => {
 
 })
 
+
 function show() {
-    if (nombre == "error") {
-        formDatosGenerales.style.display = 'none';
-        formDatosSalariales.style.display = 'block';
-    }
-    console.log(nombre)
-}
-
-
-function validar(edad) {
     if (edad < 18) {
         stop();
     } else if (18 <= edad && edad< 25) {
@@ -81,8 +108,14 @@ function validar(edad) {
     } else if (edad >= 60) {
         pension();
     } else {
-        salaraioCalculo();
+        formDatosGenerales.style.display = 'none';
+        formDatosSalariales.style.display = 'block';
     }
+        
+}
+
+function validar(edad) {
+    
 }
 
 
