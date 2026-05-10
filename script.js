@@ -244,3 +244,10 @@ function calcularPorcentaje(base, porcentaje) {
 
     return resultado;
 }
+
+
+/*
+Valentina Torres Orozco
+1022956188
+Grupo 2
+*/

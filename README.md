@@ -73,3 +73,8 @@ El sistema controla casos como:
 - **JavaScript** para validaciones y cálculos  
 
 ---
+
+# Mis Datos
+Valentina Torres Orozco
+1022956188
+Grupo 2
