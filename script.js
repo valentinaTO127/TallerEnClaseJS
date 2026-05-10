@@ -46,6 +46,9 @@ const totalDedDOM = document.getElementById('totalDed');
 const netoDOM = document.getElementById('neto');
 const totalDevDom = document.getElementById('totalDev');
 
+const primero = document.getElementById('primero');
+const segundo = document.getElementById('segundo');
+
 
 function validarCampos (valor, tipo, inputNombre) {
     if (tipo == "texto") {
@@ -154,20 +157,30 @@ formDatosSalariales.addEventListener('submit', (event) => {
 function show() {
     if (edad < 18) {
         resultadosDOM.style.display = 'block'
-        resultadosDOM.innerHTML = "Usted es menor de edad, por lo tanto no puede seguir con el siguiente paso"
+        salarioDOM.innerHTML = "Usted es menor de edad, por lo tanto no puede seguir con el siguiente paso"
+        primero.innerHTML = ""
+        segundo.innerHTML = ""
     } else if (18 <= edad && edad< 25) {
         resultadosDOM.style.display = 'block'
-        resultadosDOM.innerHTML = "Usted clasifica como usuario beneeficiario por cotizante, por lo tanto no puede seguir con el siguiente paso"
+        salarioDOM.innerHTML = "Usted clasifica como usuario beneeficiario por cotizante, por lo tanto no puede seguir con el siguiente paso"
+        primero.innerHTML = ""
+        segundo.innerHTML = ""
     } else if (edad >= 60) {
         formDatosGenerales.style.display = 'none';
         formDatosSalariales.style.display = 'flex';
-        formDatosSalariales.innerHTML = `<label for="salario">Salario</label>
+        formDatosSalariales.innerHTML = `<label for="salario">Mesada Pensional</label>
                 <input type="text" id="salario" name="salario" placeholder="4000000" minlength="6" maxlength="8" required>
                 <button type="submit">Enviar</button>`
         resultadosDOM.style.display = 'block'
+        salarioDOM.innerHTML = ""
+        primero.innerHTML = "Ingresos"
+        segundo.innerHTML = "Deducibles"
     } else {
         formDatosGenerales.style.display = 'none';
         formDatosSalariales.style.display = 'flex';
+        salarioDOM.innerHTML = ""
+        primero.innerHTML = "Ingresos"
+        segundo.innerHTML = "Deducibles"
     }
         
 }
@@ -231,3 +244,10 @@ function calcularPorcentaje(base, porcentaje) {
 
     return resultado;
 }
+
+
+/*
+Valentina Torres Orozco
+1022956188
+Grupo 2
+*/
