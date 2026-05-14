@@ -21,9 +21,10 @@ const porcentajeFondoSolidaridad = 0.01;
 const riesgos = [0.00522, 0.01044, 0.02436, 0.04350, 0.06960];
 
 const mensajesDeError =  [
-    "No se permiten numeros en este campo", 
-    "Solo se permiten numeros en este campo",
-    " debe estar entre un rango de "
+    "No se permiten números en el campo de ", 
+    "Solo se permiten números en el campo de ",
+    " debe estar entre un rango de ",
+    " solo puede tener números positivos"
 ]
 
 let mensajes = []
@@ -57,7 +58,7 @@ function validarCampos (valor, tipo, inputNombre) {
             return valor;
         }
 
-        mensajes.push("No se permiten numeros en el campo de " + inputNombre);
+        mensajes.push(mensajesDeError[0] + inputNombre);
         return null;
     }
 
@@ -65,9 +66,11 @@ function validarCampos (valor, tipo, inputNombre) {
 
         if (!isNaN(valor.trim()) && valor !== "") {
             return Number(valor.trim());
+        } else  if(valor == "" ){
+            return 0;
         }
 
-        mensajes.push("Solo se permiten numeros en el campo de " + inputNombre);
+        mensajes.push(mensajesDeError[1] + inputNombre);
         return null;
     }
 }
@@ -86,6 +89,10 @@ formDatosGenerales.addEventListener('submit', (event) => {
         if (edad < 1 || 130 < edad) {
             mensajes.push("Edad" + mensajesDeError[2] + "1 a 130")
         } 
+
+        if (Number(numeroDocumento) <= 0) {
+              mensajes.push("Número de documento" + mensajesDeError[3])
+        }
     
         if(mensajes.length > 0){
             erroresDOM.style.display = 'block';
@@ -117,13 +124,14 @@ formDatosSalariales.addEventListener('submit', (event) => {
         totalHorasExtras = validarCampos(document.getElementById('horasExtra').value, "number", "horas extra");
         nivelRiesgo = validarCampos(document.getElementById('nivelRiesgo').value,"number", "nivel de riesgo");
 
+    
         if (salario < 100000 || 99999999 < salario) {
             mensajes.push("Salario" + mensajesDeError[2] + "100000 a 99999999")
         } 
-        if (comisiones < 1000 || 99999999 < comisiones) {
+        if ((comisiones < 1000 || 99999999 < comisiones) && comisiones !== 0) {
                 mensajes.push("Comisiones" + mensajesDeError[2] + "1000 a 99999999")
         } 
-        if (totalHorasExtras < 1000 || 50000000 < totalHorasExtras) {
+        if ((totalHorasExtras < 1000 || 50000000 < totalHorasExtras) && totalHorasExtras !== 0) {
                 mensajes.push("Horas extra" + mensajesDeError[2] + "1000 a 50000000")
         } 
     }
@@ -162,7 +170,7 @@ function show() {
         segundo.innerHTML = ""
     } else if (18 <= edad && edad< 25) {
         resultadosDOM.style.display = 'block'
-        salarioDOM.innerHTML = "Usted clasifica como usuario beneeficiario por cotizante, por lo tanto no puede seguir con el siguiente paso"
+        salarioDOM.innerHTML = "Usted clasifica como usuario beneficiario por cotizante, por lo tanto no puede seguir con el siguiente paso"
         primero.innerHTML = ""
         segundo.innerHTML = ""
     } else if (edad >= 60) {
